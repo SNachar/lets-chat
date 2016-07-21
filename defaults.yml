@@ -37,7 +37,7 @@ secrets:
   cookie: secretsauce
 
 files:
-  enable: false
+  enable: true
   provider: local
   maxFileSize: 100000000
   restrictTypes: true
@@ -56,9 +56,29 @@ auth:
   local:
     enableRegistration: true
     passwordRegex: ^.{8,64}$
+  ldap:
+    connect_settings:
+      url: ldap://ldap.example.com
+      tlsOptions:
+        ca: ca.pem
+    bind_options:
+      bindDN: uid=letschat,cn=sysusers,cn=accounts,dc=example,dc=com
+      bindCredentials: Pa$$word123
+    search:
+      base: cn=users,cn=accounts,dc=example,dc=com
+      opts:
+        scope: one # Base search (base), one level search (one) or subtree search (sub)
+        filter: (uid={{username}}) # Only {{username}} is available
+    field_mappings:
+      uid: uid # LDAP unique ID
+      username: uid # used for mention (@uid)
+      firstName: givenName
+      lastName: sn
+      displayName: givenName
+      email: mail
 
 private:
-  enable: false
+  enable: true
   roster: online # online / all
   expire: 360 # false or number of minutes
 
@@ -71,7 +91,7 @@ giphy:
   apiKey: dc6zaTOxFJmzC
 
 rooms:
-  private: false
+  private: true
 
 i18n:
-  locale: en
+  locale: fr
